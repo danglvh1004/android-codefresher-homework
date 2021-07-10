@@ -58,31 +58,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, recyclerView, new ClickListener() {
+        adapter.setClickListener(new ContactAdapter.ClickListener() {
             @Override
-            public void onClick(View view, int position) {
-//                displayToast("onClick Item " + position);
-
-                Contact contact = contactList.get(position);
-
-                boolean isDelete = false;
-                Intent intentEdit = getIntent();
-                intentEdit.getBooleanExtra("isDeleteBoolean", isDelete);
-
-                if (isDelete == true) {
-                    return;
-                }
+            public void onClick(Contact contact, int position) {
+//                displayToast(String.valueOf(position));
+//                displayToast(contact.toString());
 
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra("contact_edit", contact);
                 startActivityForResult(intent, EDIT_REQUEST_CODE);
             }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
+        });
     }
 
     private void initUI() {
@@ -144,57 +130,6 @@ public class MainActivity extends AppCompatActivity {
         contactList.addAll(dbManager.getAllContacts());
         if (adapter != null) {
             adapter.notifyDataSetChanged();
-        }
-    }
-
-    public interface ClickListener {
-        public void onClick(View view, int position);
-
-        public void onLongClick(View view, int position);
-    }
-
-    class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
-
-        private ClickListener clicklistener;
-        private GestureDetector gestureDetector;
-
-        public RecyclerTouchListener(Context context, final RecyclerView recycleView, final ClickListener clicklistener) {
-
-            this.clicklistener = clicklistener;
-            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    View child = recycleView.findChildViewUnder(e.getX(), e.getY());
-                    if (child != null && clicklistener != null) {
-                        clicklistener.onLongClick(child, recycleView.getChildAdapterPosition(child));
-                    }
-                }
-            });
-        }
-
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-            View child = rv.findChildViewUnder(e.getX(), e.getY());
-            if (child != null && clicklistener != null && gestureDetector.onTouchEvent(e)) {
-                clicklistener.onClick(child, rv.getChildAdapterPosition(child));
-            }
-
-            return false;
-        }
-
-        @Override
-        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-        }
-
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
         }
     }
 

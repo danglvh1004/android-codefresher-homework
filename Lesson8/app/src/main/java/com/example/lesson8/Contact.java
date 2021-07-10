@@ -56,4 +56,14 @@ public class Contact implements Serializable {
     public void setmPhone(String mPhone) {
         this.mPhone = mPhone;
     }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "mId=" + mId +
+                ", mName='" + mName + '\'' +
+                ", mAddress='" + mAddress + '\'' +
+                ", mPhone='" + mPhone + '\'' +
+                '}';
+    }
 }

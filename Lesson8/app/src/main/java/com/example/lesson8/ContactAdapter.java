@@ -60,13 +60,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
                     displayToast("Delete Successfully");
                     contactList.remove(contact);
                     notifyDataSetChanged();
-
-                    Intent intentEdit = new Intent(context, MainActivity.class);
-                    Bundle bundle = new Bundle();
-                    boolean isDelete = true;
-                    bundle.putBoolean("isDeleteBoolean", isDelete);
-                    intentEdit.putExtras(bundle);
-                    context.startActivity(intentEdit);
                 }
 
             }
@@ -82,7 +75,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         }
     }
 
-    public class ContactViewHolder extends RecyclerView.ViewHolder {
+    public class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvName;
         private TextView tvAddress;
@@ -96,7 +89,24 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             tvAddress = itemView.findViewById(R.id.tv_address);
             tvPhone = itemView.findViewById(R.id.tv_phone);
             imgDelete = itemView.findViewById(R.id.img_delete);
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onClick(contactList.get(getLayoutPosition()), getLayoutPosition());
+        }
+    }
+
+    public interface ClickListener {
+        public void onClick(Contact contact, int position);
+    }
+
+    public ClickListener clickListener;
+
+    public void setClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
     private void displayToast(String message) {
